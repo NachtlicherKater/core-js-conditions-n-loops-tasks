@@ -471,8 +471,26 @@ function sortByAsc(inputArr) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  let result = str;
+  for (let iter = iterations; iter > 0; ) {
+    let leftShoulder = '';
+    let rightShoulder = '';
+    for (let i = 0; i < result.length; i += 1) {
+      if (i % 2 === 0) {
+        leftShoulder += result[i];
+      } else {
+        rightShoulder += result[i];
+      }
+    }
+    result = leftShoulder + rightShoulder;
+    if (result === str) {
+      iter = iterations % (iterations - iter + 1);
+    } else {
+      iter -= 1;
+    }
+  }
+  return result;
 }
 
 /**
@@ -493,8 +511,32 @@ function shuffleChar(/* str, iterations */) {
  * 321321   => 322113
  *
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+function getNearestBigger(number) {
+  let currentIndex = 0;
+  let currentItem = 0;
+  let currentPivot = 0;
+  let nextPivot = 0;
+  const numberArray = Array.from(String(number), (item) => Number(item));
+  for (let i = numberArray.length - 1; i > 0; i -= 1) {
+    if (numberArray[i] > numberArray[i - 1]) {
+      currentIndex = i - 1;
+      currentItem = numberArray[currentIndex];
+      break;
+    }
+  }
+  const leftShoulder = numberArray.splice(0, currentIndex);
+  let rightShoulder = numberArray.sort((a, b) => a - b);
+  for (let i = 0; i < rightShoulder.length; i += 1) {
+    if (rightShoulder[i] === currentItem) {
+      currentPivot = rightShoulder[i + 1];
+      nextPivot = i + 1;
+    }
+  }
+  rightShoulder = [
+    ...rightShoulder.splice(0, nextPivot),
+    ...rightShoulder.splice(1),
+  ];
+  return Number([...leftShoulder, currentPivot, ...rightShoulder].join(''));
 }
 
 module.exports = {
